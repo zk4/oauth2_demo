@@ -1,4 +1,4 @@
-package com.qq;
+package com.qq.rest;
 
 public class RetWrapper {
     Integer code;

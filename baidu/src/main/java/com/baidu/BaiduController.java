@@ -62,12 +62,7 @@ public class BaiduController {
 								RetWrapper.class);
 
 						LinkedHashMap data = (LinkedHashMap) forEntity.getBody().getData();
-						Token token = new Token();
-						token.setAccess_token((String) data.get("access_token"));
-						token.setRefresh_token((String) data.get("refresh_token"));
-						token.setScope((String) data.get("scope"));
-
-						s_tid_tokens.put(tid, token);
+						s_tid_tokens.put(tid, Token.newTokenFromMap(data));
 						return "redirect:/home";
 					}
 				}
@@ -85,7 +80,6 @@ public class BaiduController {
 			for (Cookie ck : cookies) {
 				if ("baidu-tid".equals(ck.getName())) {
 					String tid = ck.getValue();
-					System.out.println("baidu-tid:" + tid);
 
 					Token token = s_tid_tokens.get(tid);
 					if (token != null) {
@@ -106,7 +100,7 @@ public class BaiduController {
 						if (resource.getBody().getCode() == 0) {
 							model.addAttribute("data", resource.getBody().getData());
 							return "home";
-						} else if (resource.getBody().getCode() == -2) {
+						} else if (resource.getBody().getCode() == CodeStatus.TOKEN_EXPIRED) {
 
 							ResponseEntity<RetWrapper> newToken = restTemplate.getForEntity(
 									"http://localhost:8080/oauth/refresh?client_id=2&client_secret=IamSerect&refresh_token=" + token
@@ -117,12 +111,7 @@ public class BaiduController {
 								return "redirect:/";
 							} else {
 								LinkedHashMap data = (LinkedHashMap) newToken.getBody().getData();
-								Token token2 = new Token();
-								token2.setAccess_token((String) data.get("access_token"));
-								token2.setRefresh_token((String) data.get("refresh_token"));
-								token2.setScope((String) data.get("scope"));
-
-								s_tid_tokens.put(tid, token2);
+								s_tid_tokens.put(tid, Token.newTokenFromMap(data));
 								return "redirect:/home";
 							}
 						}

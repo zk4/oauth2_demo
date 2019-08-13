@@ -9,7 +9,6 @@
 </head>
 <body>
 
-html
-${data}
+<img src="${data}"/>
 </body>
 </html>

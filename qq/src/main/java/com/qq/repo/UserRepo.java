@@ -1,5 +1,6 @@
-package com.qq;
+package com.qq.repo;
 
+import com.qq.bean.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;

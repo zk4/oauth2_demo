@@ -1,5 +1,13 @@
-package com.qq;
+package com.qq.controller;
 
+import com.qq.Utils;
+import com.qq.bean.ClientBean;
+import com.qq.bean.Token;
+import com.qq.bean.User;
+import com.qq.repo.ClientBeanRepo;
+import com.qq.repo.UserRepo;
+import com.qq.rest.CodeStatus;
+import com.qq.rest.RetWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
-public class AuthController {
+public class Oauth2Controller {
 
     ClientBeanRepo clientBeanRepo;
 
@@ -17,7 +25,7 @@ public class AuthController {
     public static ConcurrentHashMap<String, String> user_code = new ConcurrentHashMap<>();
 
     @Autowired
-    public AuthController(ClientBeanRepo clientBeanRepo, UserRepo userRepo) {
+    public Oauth2Controller(ClientBeanRepo clientBeanRepo, UserRepo userRepo) {
         this.clientBeanRepo = clientBeanRepo;
         this.userRepo = userRepo;
     }
@@ -74,10 +82,10 @@ public class AuthController {
     @GetMapping("/oauth/token")
     @ResponseBody
     public RetWrapper token(@RequestParam("client_id") Integer client_id,
-                       @RequestParam("client_secret") String client_secret,
-                       @RequestParam("grant_type") String grant_type,
-                       @RequestParam("code") String code,
-                       @RequestParam("redirect_uri") String redirect_uri
+                            @RequestParam("client_secret") String client_secret,
+                            @RequestParam("grant_type") String grant_type,
+                            @RequestParam("code") String code,
+                            @RequestParam("redirect_uri") String redirect_uri
     ) {
         ClientBean clientBean = new ClientBean().setId(client_id)
                 .setSecrectKey(client_secret)
@@ -114,17 +122,11 @@ public class AuthController {
             token1.setAccess_token(Utils.createJWT(5, "id:" + 1));
             return RetWrapper.ok(token1);
             }catch (Exception e ){
-                return RetWrapper.custom(-3,"token全失效",null);
+                return RetWrapper.custom(CodeStatus.REFRESH_EXPIRED,"refresh token 失效",null);
             }
         }
-        return RetWrapper.custom(-3,"出错",null);
+        return RetWrapper.custom(CodeStatus.ERROR,"出错",null);
     }
 
-    @GetMapping("/resource/{id}")
-    @ResponseBody
-    @Authorize
-    public RetWrapper resource(Integer id) {
-        return RetWrapper.ok("zk4 image is here ");
 
-    }
 }

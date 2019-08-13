@@ -1,5 +1,7 @@
-package com.qq;
+package com.qq.controller;
 
+import com.qq.repo.UserRepo;
+import com.qq.bean.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +21,7 @@ public class UserController {
 
 	@PostMapping("/register")
 	@ResponseBody
-	public  User register(@RequestBody User user){
+	public User register(@RequestBody User user){
 		User user1 = userRepo.addUser(user);
 		return user1;
 	}

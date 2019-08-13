@@ -1,4 +1,4 @@
-package com.qq;
+package com.qq.bean;
 
 import java.util.concurrent.ConcurrentHashMap;
 

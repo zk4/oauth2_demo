@@ -1,5 +1,6 @@
-package com.qq;
+package com.qq.repo;
 
+import com.qq.bean.ClientBean;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Repository;
 

@@ -35,12 +35,11 @@ public class Utils {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(SECRET);
 			JWTVerifier verifier = JWT.require(algorithm)
-//					.withIssuer("auth0")
-					.build(); //Reusable verifier instance
+					.build();
 			return verifier.verify(token);
 		} catch (JWTVerificationException exception){
 			throw exception;
-			//Invalid signature/claims
+
 		}
 
 	}

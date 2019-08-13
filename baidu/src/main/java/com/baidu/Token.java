@@ -1,5 +1,7 @@
 package com.baidu;
 
+import java.util.Map;
+
 public class Token {
 	private String access_token;
 	private String refresh_token;
@@ -13,7 +15,13 @@ public class Token {
 		this.access_token = access_token;
 		return this;
 	}
-
+	public static Token newTokenFromMap(Map data){
+		Token token2 = new Token();
+		token2.setAccess_token((String) data.get("access_token"));
+		token2.setRefresh_token((String) data.get("refresh_token"));
+		token2.setScope((String) data.get("scope"));
+		return token2;
+	}
 
 
   	public String getRefresh_token() {

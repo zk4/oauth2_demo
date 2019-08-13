@@ -1,6 +1,7 @@
 package com.qq;
 
-import junit.framework.TestCase;
+import com.qq.bean.ClientBean;
+import com.qq.repo.ClientBeanRepo;
 import org.junit.Test;
 
 public class ClientBeanRepoTest  {
