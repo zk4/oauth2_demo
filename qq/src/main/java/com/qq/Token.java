@@ -14,9 +14,27 @@ public class Token {
 		return this;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Token)) return false;
 
+		Token token = (Token) o;
 
-  	public String getRefresh_token() {
+		if (!getAccess_token().equals(token.getAccess_token())) return false;
+		if (!getRefresh_token().equals(token.getRefresh_token())) return false;
+		return getScope().equals(token.getScope());
+	}
+
+	@Override
+	public int hashCode() {
+		int result = getAccess_token().hashCode();
+		result = 31 * result + getRefresh_token().hashCode();
+		result = 31 * result + getScope().hashCode();
+		return result;
+	}
+
+	public String getRefresh_token() {
 		return refresh_token;
 	}
 

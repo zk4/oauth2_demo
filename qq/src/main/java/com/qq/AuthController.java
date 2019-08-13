@@ -6,12 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 @Controller
 public class AuthController {
 
     ClientBeanRepo clientBeanRepo;
 
     UserRepo userRepo;
+    public static ConcurrentHashMap<String, String> user_code = new ConcurrentHashMap<>();
 
     @Autowired
     public AuthController(ClientBeanRepo clientBeanRepo, UserRepo userRepo) {
@@ -70,7 +73,7 @@ public class AuthController {
 
     @GetMapping("/oauth/token")
     @ResponseBody
-    public Token token(@RequestParam("client_id") Integer client_id,
+    public RetWrapper token(@RequestParam("client_id") Integer client_id,
                        @RequestParam("client_secret") String client_secret,
                        @RequestParam("grant_type") String grant_type,
                        @RequestParam("code") String code,
@@ -80,22 +83,48 @@ public class AuthController {
                 .setSecrectKey(client_secret)
                 .setRedirectUrl(redirect_uri)
                 .setGrantType(grant_type);
-        if (clientBeanRepo.ifValidate(clientBean)) {
+
+        ClientBean byId = clientBeanRepo.getById(client_id);
+        if (byId.equals(clientBean)) {
             if (code.equals(AUTHORIZATION_CODE)) {
                 Token token = new Token();
-                token.setAccess_token(Utils.createJWT(60*5,"id:"+1));
-                token.setRefresh_token(Utils.createJWT(60*5*100,"id:"+1,"t:refresh"));
-                return token;
+                token.setAccess_token(Utils.createJWT(5, "id:" + 1));
+                String refresh_token = Utils.createJWT(10, "id:" + 1, "t:refresh");
+                token.setRefresh_token(refresh_token);
+                byId.getTokens().put(refresh_token, token);
+                return RetWrapper.ok(token);
             }
         }
-        return null;
+        return RetWrapper.error("wtf",null);
     }
 
-    @GetMapping("/resource/{token}")
+    @GetMapping("/oauth/refresh")
     @ResponseBody
-    public String resource(@PathVariable("token") String token) {
-        if (token.equals("youcanaccess"))
-            return "zk4 image is here ";
-        return "not allowd";
+    public RetWrapper token(@RequestParam("client_id") Integer client_id,
+                       @RequestParam("client_secret") String client_secret,
+                       @RequestParam("refresh_token") String refresh_token
+
+    ) {
+        ClientBean clientBean = clientBeanRepo.getById(client_id);
+        if (clientBean.getSecrectKey().equals(client_secret)) {
+            try {
+                Utils.verify(refresh_token);
+
+            Token token1 = clientBean.getTokens().get(refresh_token);
+            token1.setAccess_token(Utils.createJWT(5, "id:" + 1));
+            return RetWrapper.ok(token1);
+            }catch (Exception e ){
+                return RetWrapper.custom(-3,"token全失效",null);
+            }
+        }
+        return RetWrapper.custom(-3,"出错",null);
+    }
+
+    @GetMapping("/resource/{id}")
+    @ResponseBody
+    @Authorize
+    public RetWrapper resource(Integer id) {
+        return RetWrapper.ok("zk4 image is here ");
+
     }
 }

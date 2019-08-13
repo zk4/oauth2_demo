@@ -31,7 +31,7 @@ public class Utils {
 		return builder.sign(algorithm);
 	}
 
-	public static DecodedJWT verify(String token) throws  Exception{
+	public static DecodedJWT verify(String token) throws  JWTVerificationException{
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(SECRET);
 			JWTVerifier verifier = JWT.require(algorithm)

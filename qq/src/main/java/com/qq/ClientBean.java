@@ -7,13 +7,15 @@ public class ClientBean {
 	private String secrectKey;
 	private String grantType;
 	private String redirectUrl;
-	private ConcurrentHashMap<Integer, Token> tokens;
+	private ConcurrentHashMap<String, Token> tokens;
 
-	public ConcurrentHashMap<Integer, Token> getTokens() {
+	public synchronized ConcurrentHashMap<String, Token> getTokens() {
+		if(tokens==null)
+			tokens=new ConcurrentHashMap<String, Token>();
 		return tokens;
 	}
 
-	public ClientBean setTokens(ConcurrentHashMap<Integer, Token> tokens) {
+	public ClientBean setTokens(ConcurrentHashMap<String, Token> tokens) {
 		this.tokens = tokens;
 		return this;
 	}
