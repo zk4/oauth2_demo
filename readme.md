@@ -9,8 +9,10 @@ start qq serer as a Authorization Server
 start baidu serer as Client
 
 open http://localhost:8081/
-
+## authorized code flow
 ![img](https://github.com/zk4/oauth2_demo/blob/master/code.jpeg?raw=true)
+
+
 
 # default config
 authorized code expires in 10 secs
