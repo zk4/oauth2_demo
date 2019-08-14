@@ -10,7 +10,8 @@
 <body>
 <h1>Baidu pan</h1>
 
- <a href="http://localhost:8080/authorize?response_type=code&client_id=2&redirect_uri=http://localhost:8081/callback&scope=read&state=${state}"> login with qq</a>
+ <a href="http://localhost:8080/authorize?response_type=code&client_id=2&redirect_uri=http://localhost:8081/callback&scope=read&state=${state}"> login with qq (code)</a>
+ <a href="http://localhost:8080/authorize?response_type=token&client_id=2&redirect_uri=http://localhost:8081/callback&scope=read&state=${state}"> login with qq (token)</a>
 
 </body>
 </html>

@@ -11,7 +11,7 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import java.time.Instant;
 import java.util.Date;
 
-public class Utils {
+public class TokenUtils {
 	private  static String SECRET="sdfjskldfjlksdjfklsjflksjdfl";
 	public static String createJWT(long ttlsecs,String...args) {
 		JWTCreator.Builder builder = com.auth0.jwt.JWT.create();

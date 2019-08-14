@@ -3,12 +3,12 @@ package com.qq.repo;
 import com.qq.bean.User;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class UserRepo {
-	static private Map<String, User> users = new HashMap<String, User>();
+	static private Map<String, User> users = new ConcurrentHashMap<String, User>();
 
 	static {
 		User user = new User();

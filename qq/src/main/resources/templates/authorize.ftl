@@ -12,27 +12,13 @@
 <form action="/login" method="post">
     <input type="text" name="username" placeholder="输入用户名 ">
     <input type="text" name="password" placeholder="输入密码  ">
-    <input type="hidden" id="state" name="state" value="" />
+    <input type="hidden" name="state" value="${state}" />
+    <input type="hidden" name="response_type" value="${response_type}" />
+
     <input type="submit" value="提交">
 </form>
-<script>
-
-    function querySt(ji) {
-
-        hu = window.location.search.substring(1);
-        gy = hu.split("&");
-
-        for (i=0;i<gy.length;i++) {
-            ft = gy[i].split("=");
-            if (ft[0] == ji) {
-                return ft[1];
-            }
-        }
-    }
-    var s = querySt("state");
-    document.getElementById('state').value = s;
-
-
-</script>
+<#if error??>
+    ${error}
+</#if>
 </body>
 </html>

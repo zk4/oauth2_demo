@@ -41,9 +41,35 @@ public class BaiduController {
 		response.addCookie(cookie);
 
 		return "index";
+
+
 	}
 
-	@GetMapping(value = "/callback")
+	@GetMapping(value = "/implicit/callback")
+	public Object implicit_callback(@RequestParam("state") String state, HttpServletRequest httpRequest) {
+		Cookie[] cookies = httpRequest.getCookies();
+		if (cookies != null) {
+			for (Cookie ck : cookies) {
+				if ("baidu-tid".equals(ck.getName())) {
+					String tid = ck.getValue();
+					System.out.println("baidu-tid:" + tid);
+					String s = s_cookies.get(tid);
+					// avoid csrf
+					if (state.equals(s)) {
+						s_cookies.remove(tid);
+						return "implicit";
+					}
+				}
+			}
+		}
+
+
+
+		// 重新登陆
+		return "redirect:/";
+	}
+
+	@GetMapping(value = "/code/callback")
 
 	public Object callback(Model model, @RequestParam("state") String state, @RequestParam("code") String code, HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
 		Cookie[] cookies = httpRequest.getCookies();
@@ -55,18 +81,20 @@ public class BaiduController {
 					String s = s_cookies.get(tid);
 					// avoid csrf
 					if (state.equals(s)) {
-
+						s_cookies.remove(tid);
 						RestTemplate restTemplate = new RestTemplate();
 						ResponseEntity<RetWrapper> forEntity = restTemplate.getForEntity(
 								"http://localhost:8080/oauth/token?client_id=2&client_secret=IamSerect&grant_type=authorization_code&code=" + code + "&redirect_uri=http://localhost:8081/callback",
 								RetWrapper.class);
-
-						LinkedHashMap data = (LinkedHashMap) forEntity.getBody().getData();
-						s_tid_tokens.put(tid, Token.newTokenFromMap(data));
-						return "redirect:/home";
+						if (forEntity.getBody().getCode() == 0) {
+							LinkedHashMap data = (LinkedHashMap) forEntity.getBody().getData();
+							s_tid_tokens.put(tid, Token.newTokenFromMap(data));
+							return "redirect:/home";
+						}
 					}
 				}
 			}
+
 		}
 		// 重新登陆
 		return "redirect:/";

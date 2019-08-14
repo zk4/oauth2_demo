@@ -4,13 +4,13 @@ import com.qq.bean.ClientBean;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class ClientBeanRepo {
 
-	Map<Integer, ClientBean> clientBeans = new HashMap<>();
+	Map<Integer, ClientBean> clientBeans = new ConcurrentHashMap<>();
 
 	{
 		ClientBean clientBean = new ClientBean();
