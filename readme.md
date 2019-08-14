@@ -1,7 +1,8 @@
 # oauth 2.0 demo
 
-demo for authorized code grant and  implicit grant
-No dependent on Spring.
+demo for authorized code grant and  implicit grant  
+Based on springboot (web, aop)  
+
 
 # start
 start qq serer
